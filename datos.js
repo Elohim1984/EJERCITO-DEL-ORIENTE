@@ -77,6 +77,37 @@
     });
   }
 
+  function version(u) {
+    return pedir((u || liga()) + "?action=ping").then(function (d) { return (d && d.version) || 1; });
+  }
+
+  // Lee datos privados (alumnos, asistencia…): requiere la clave de dirección
+  function leerPrivado(prefijo, claveDireccion) {
+    var u = liga();
+    if (!u) return Promise.reject(new Error("No hay hoja conectada."));
+    return pedir(u + "?action=listar&prefijo=" + encodeURIComponent(prefijo) + "&clave=" + encodeURIComponent(claveDireccion)).then(function (d) {
+      if (!d || !d.ok || !Array.isArray(d.filas)) throw new Error((d && d.error) || "No se pudo leer la hoja.");
+      var salida = {};
+      d.filas.forEach(function (f) {
+        try { salida[f.clave] = JSON.parse(f.valor); } catch (e) {}
+      });
+      return salida;
+    });
+  }
+
+  function borrar(clave, claveDireccion) {
+    var u = liga();
+    if (!u) return Promise.reject(new Error("No hay hoja conectada."));
+    return pedir(u, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ action: "borrar", key: clave, clave: claveDireccion })
+    }).then(function (d) {
+      if (!d || !d.ok) throw new Error((d && d.error) || "No se pudo borrar.");
+      return true;
+    });
+  }
+
   // Junta los datos guardados en la hoja con los valores base de config.js
   function combinar(base, guardados) {
     var P = JSON.parse(JSON.stringify(base));
@@ -111,6 +142,9 @@
     verificar: verificar,
     leerTodo: leerTodo,
     guardar: guardar,
+    borrar: borrar,
+    leerPrivado: leerPrivado,
+    version: version,
     combinar: combinar
   };
 })();

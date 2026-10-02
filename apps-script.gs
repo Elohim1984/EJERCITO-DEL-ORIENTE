@@ -11,6 +11,7 @@
  */
 const CLAVE_DIRECCION = "CAMBIA-ESTA-CLAVE";
 
+const VERSION = 2;
 const NOMBRE_HOJA = "Datos";
 const CLAVE_DE_EJEMPLO = "CAMBIA-ESTA-CLAVE";
 
@@ -42,12 +43,21 @@ function claveCorrecta_(clave) {
   return CLAVE_DIRECCION !== CLAVE_DE_EJEMPLO && String(clave || "") === CLAVE_DIRECCION;
 }
 
+// Los datos del portal ("config:") son públicos para que el portal los muestre.
+// Todo lo demás (alumnos, asistencia, calificaciones) solo se lee con la clave.
+function esPublico_(clave) {
+  return String(clave || "").indexOf("config:") === 0;
+}
+
 function doGet(e) {
   const p = (e && e.parameter) || {};
   try {
+    if ((p.action === "get" && !esPublico_(p.key)) || (p.action === "listar" && !esPublico_(p.prefijo))) {
+      if (!claveCorrecta_(p.clave)) return respuesta_({ ok: false, error: "Clave de dirección incorrecta." });
+    }
     switch (p.action) {
       case "ping":
-        return respuesta_({ ok: true, sistema: "portal-escolar" });
+        return respuesta_({ ok: true, sistema: "portal-escolar", version: VERSION });
 
       case "verificar":
         return respuesta_({
