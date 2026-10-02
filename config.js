@@ -9,7 +9,7 @@ window.PORTAL = {
   // Enlace de la hoja de Google (Apps Script) de la escuela.
   // Se pega aquí UNA sola vez, cuando la escuela termine de conectarla,
   // para que todos los visitantes vean la información guardada.
-  ligaHoja: "",
+  ligaHoja: "https://script.google.com/macros/s/AKfycbyouYuTVj8YIzUuFmNMXoU8ZBVgexxALWWLFepSxh0NmqjTrQlLRgdUSIke0qQLTJ1_PQ/exec",
 
   escudo: "escudo.png",
 
