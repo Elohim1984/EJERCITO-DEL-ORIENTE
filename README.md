@@ -7,36 +7,25 @@ Se va completando poco a poco: cada herramienta aparece como **En preparación**
 
 - Código de acceso provisional: `ORIENTE2026`. Cámbienlo antes de compartir la página.
 
-## Dónde se cambian los datos
+## Cómo se llena la información
 
-Todo está al inicio de `index.html`, en el bloque **CONFIGURACIÓN DE LA ESCUELA**:
+La escuela guarda todo directo en **su propia hoja de Google** y el portal lo muestra al instante:
 
-- `window.ESCUELA`: nombre, tipo, CCT, turno, sostenimiento, zona, localidad, municipio, estado, ciclo, código de acceso, escudo y calendario.
-- `window.HERRAMIENTAS`: las tarjetas del portal. Para habilitar una herramienta se cambia su `estado` a `"lista"` y se pone el nombre de su archivo en `enlace`.
+1. La dirección sigue `guia-conexion.html` (una sola vez): crea su hoja, pega `apps-script.gs`, pone su clave y publica.
+2. Entra a `configuracion.html` con el enlace de su hoja y su clave de dirección.
+3. Llena los 5 pasos: Escuela, Equipo, Grupos, Calendario y Avisos. Cada "Guardar" se refleja en el portal.
+4. Una sola vez: el enlace de la hoja se pega en `ligaHoja` de `config.js` para que todos los visitantes vean los datos.
 
-## Lo que falta por llenar
+## Archivos
 
-**Datos de la escuela**
-- [ ] Tipo o nivel educativo (telesecundaria, primaria, etc.)
-- [ ] Clave CCT
-- [ ] Turno
-- [ ] Sostenimiento
-- [ ] Zona (rural/urbana)
-- [ ] Localidad, municipio y estado
-- [ ] Escudo o logo (subir la imagen al repositorio)
-- [ ] Código de acceso propio
-- [ ] Confirmar las fechas del calendario oficial
+- `index.html`: portal público (pide código de acceso).
+- `configuracion.html`: formulario paso a paso para la dirección.
+- `guia-conexion.html`: guía para conectar la hoja de Google.
+- `apps-script.gs`: código que se pega en la hoja de Google de la escuela.
+- `config.js`: valores base, enlace de la hoja y tarjetas de herramientas.
+- `datos.js`: lectura y guardado en la hoja. `estilos.css`: diseño. `escudo.png`: logo.
 
-**Herramientas** (en el orden que la escuela las necesite)
-- [ ] Diagnóstico académico (examen)
-- [ ] Diagnóstico VAK (estilos de aprendizaje)
-- [ ] Diagnóstico integral
-- [ ] Reglamento de Convivencia
-- [ ] Ejercicios Integradores del Aprendizaje (EIA)
-- [ ] Programa Analítico
-- [ ] PEMC
-- [ ] PIC
-- [ ] Control Escolar (inscripciones, asistencia, calificaciones, avisos, CTE, documentos de dirección)
-
-Para el Control Escolar y los diagnósticos que guardan respuestas se necesitará además una hoja de Google
-(Apps Script) propia de esta escuela, separada de la de Amado Nervo.
+## Pendiente: herramientas
+- [ ] Diagnóstico académico, VAK, Diagnóstico integral, Reglamento, EIA
+- [ ] Programa Analítico, PEMC, PIC
+- [ ] Control Escolar (alumnos, asistencia, calificaciones) — usará la misma hoja de Google

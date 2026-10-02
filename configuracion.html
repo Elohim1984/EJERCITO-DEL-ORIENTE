@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Configuración del portal</title>
+<link rel="icon" href="escudo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css" />
+<script src="config.js"></script>
+<script src="datos.js"></script>
+</head>
+<body>
+
+<!-- ============ Entrada: conectar la hoja y escribir la clave ============ -->
+<div id="gate">
+  <div class="gate-card" style="max-width:480px">
+    <div class="tile-rule"></div>
+    <div class="gate-body">
+      <img class="crest" src="escudo.png" alt="Logo de Telesecundarias Puebla" />
+      <div class="gate-eyebrow">Solo dirección</div>
+      <h1 class="gate-title">Configuración del portal</h1>
+      <p class="gate-sub">Conecte la hoja de Google de la escuela para guardar la información directamente en el portal.</p>
+
+      <form class="gate-form" id="form-entrada">
+        <label class="gate-label" for="liga">Enlace de la hoja de Google (Apps Script)</label>
+        <input id="liga" class="mono" type="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec"
+               style="width:100%;font-size:13px;padding:12px 14px;border-radius:3px;border:1.5px solid var(--line);background:var(--ground);color:var(--ink);outline:none" />
+        <div style="height:14px"></div>
+        <label class="gate-label" for="codigo">Clave de dirección</label>
+        <input id="codigo" class="mono" type="password" autocomplete="off" placeholder="••••••••" />
+        <button class="gate-btn" type="submit" id="btn-entrar">Probar conexión y entrar</button>
+        <div class="gate-error" id="gate-error" role="alert"></div>
+      </form>
+
+      <p class="gate-note">¿Todavía no tiene su hoja de Google? Siga la <a href="guia-conexion.html"><b>guía paso a paso</b></a> (toma unos 10 minutos y solo se hace una vez). &middot; <a href="index.html">Volver al portal</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Configuración paso a paso ============ -->
+<div id="portal">
+  <header class="band">
+    <div class="band-inner">
+      <div class="band-top">
+        <img class="band-crest" src="escudo.png" alt="Logo de Telesecundarias Puebla" />
+        <div>
+          <div class="band-eyebrow">Configuración &middot; solo dirección</div>
+          <h1 id="titulo-escuela">Configuración del portal</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="tile-rule"></div>
+
+  <main>
+    <div id="nota-publicar"></div>
+
+    <nav class="pasos" id="pasos" aria-label="Pasos de configuración"></nav>
+
+    <!-- Paso 1 -->
+    <section class="panel" data-paso="escuela">
+      <h2>1. Datos de la escuela</h2>
+      <p class="ayuda">Así aparecerá la escuela en la portada del portal. Puede llenar solo lo que tenga y completar el resto después.</p>
+      <div class="campos">
+        <div class="campo"><label for="e-nombre">Nombre de la escuela</label><input id="e-nombre" data-k="nombre" /></div>
+        <div class="campo"><label for="e-tipo">Tipo / nivel</label><input id="e-tipo" data-k="tipo" placeholder="Telesecundaria" /></div>
+        <div class="campo"><label for="e-cct">Clave CCT</label><input id="e-cct" data-k="cct" class="mono" placeholder="21ETV0000X" /></div>
+        <div class="campo"><label for="e-turno">Turno</label>
+          <select id="e-turno" data-k="turno"><option value="">— Elegir —</option><option>Matutino</option><option>Vespertino</option><option>Tiempo completo</option><option>Discontinuo</option></select></div>
+        <div class="campo"><label for="e-sost">Sostenimiento</label>
+          <select id="e-sost" data-k="sostenimiento"><option value="">— Elegir —</option><option>Público (Estatal)</option><option>Público (Federal)</option><option>Público (Federal transferido)</option><option>Particular</option></select></div>
+        <div class="campo"><label for="e-zona">Zona</label>
+          <select id="e-zona" data-k="zona"><option value="">— Elegir —</option><option>Rural</option><option>Urbana</option><option>Semiurbana</option></select></div>
+        <div class="campo"><label for="e-loc">Localidad</label><input id="e-loc" data-k="localidad" /></div>
+        <div class="campo"><label for="e-mun">Municipio</label><input id="e-mun" data-k="municipio" /></div>
+        <div class="campo"><label for="e-edo">Estado</label><input id="e-edo" data-k="estado" /></div>
+        <div class="campo"><label for="e-dom">Domicilio</label><input id="e-dom" data-k="domicilio" /></div>
+        <div class="campo"><label for="e-tel">Teléfono</label><input id="e-tel" data-k="telefono" type="tel" /></div>
+        <div class="campo"><label for="e-mail">Correo de la escuela</label><input id="e-mail" data-k="correo" type="email" /></div>
+        <div class="campo"><label for="e-ciclo">Ciclo escolar</label><input id="e-ciclo" data-k="ciclo" placeholder="2026–2027" /></div>
+        <div class="campo"><label for="e-cod">Código de acceso del portal</label><input id="e-cod" data-k="codigoPortal" class="mono" />
+          <small>Es el código que usan docentes y familias para entrar. Escríbalo en mayúsculas.</small></div>
+      </div>
+      <div class="acciones"><button class="btn btn-pri" data-guardar="escuela">Guardar datos de la escuela</button><span class="msg" data-msg="escuela"></span></div>
+    </section>
+
+    <!-- Paso 2 -->
+    <section class="panel" data-paso="personal" hidden>
+      <h2>2. Director y docentes</h2>
+      <p class="ayuda">Aparecen en la sección "Nuestro equipo" del portal.</p>
+      <div class="campos"><div class="campo"><label for="p-dir">Nombre del director o directora</label><input id="p-dir" /></div></div>
+      <h3 style="font-size:18px;margin-top:24px">Docentes</h3>
+      <div class="lista-filas" id="lista-docentes"></div>
+      <div class="acciones">
+        <button class="btn btn-sec" data-agregar="docentes">+ Agregar docente</button>
+        <button class="btn btn-pri" data-guardar="personal">Guardar equipo</button><span class="msg" data-msg="personal"></span>
+      </div>
+    </section>
+
+    <!-- Paso 3 -->
+    <section class="panel" data-paso="grupos" hidden>
+      <h2>3. Grupos</h2>
+      <p class="ayuda">Un renglón por grupo. La lista de alumnos se capturará después en Control Escolar.</p>
+      <div class="lista-filas" id="lista-grupos"></div>
+      <div class="acciones">
+        <button class="btn btn-sec" data-agregar="grupos">+ Agregar grupo</button>
+        <button class="btn btn-pri" data-guardar="grupos">Guardar grupos</button><span class="msg" data-msg="grupos"></span>
+      </div>
+    </section>
+
+    <!-- Paso 4 -->
+    <section class="panel" data-paso="calendario" hidden>
+      <h2>4. Calendario del ciclo</h2>
+      <p class="ayuda">Confirme las fechas con el calendario oficial y agregue las fechas importantes de la escuela (CTE, entregas, festivales…).</p>
+      <div class="campos">
+        <div class="campo"><label for="c-ini">Inicio de clases</label><input id="c-ini" type="date" /></div>
+        <div class="campo"><label for="c-fin">Fin del ciclo</label><input id="c-fin" type="date" /></div>
+        <div class="campo"><label for="c-dias">Días efectivos de clase</label><input id="c-dias" inputmode="numeric" /></div>
+        <div class="campo"><label for="c-fuente">Calendario oficial</label><input id="c-fuente" placeholder="SEP Puebla" /></div>
+      </div>
+      <h3 style="font-size:18px;margin-top:24px">Fechas importantes</h3>
+      <div class="lista-filas" id="lista-fechas"></div>
+      <div class="acciones">
+        <button class="btn btn-sec" data-agregar="fechas">+ Agregar fecha</button>
+        <button class="btn btn-pri" data-guardar="calendario">Guardar calendario</button><span class="msg" data-msg="calendario"></span>
+      </div>
+    </section>
+
+    <!-- Paso 5 -->
+    <section class="panel" data-paso="avisos" hidden>
+      <h2>5. Avisos</h2>
+      <p class="ayuda">Los avisos aparecen al principio del portal. Borre los que ya no estén vigentes.</p>
+      <div class="lista-filas" id="lista-avisos"></div>
+      <div class="acciones">
+        <button class="btn btn-sec" data-agregar="avisos">+ Agregar aviso</button>
+        <button class="btn btn-pri" data-guardar="avisos">Guardar avisos</button><span class="msg" data-msg="avisos"></span>
+      </div>
+    </section>
+
+    <div class="acciones" style="margin-top:0">
+      <a class="btn btn-sec" href="index.html" style="text-decoration:none">Ver el portal &rarr;</a>
+      <button class="btn btn-sec" id="btn-salir">Cerrar sesión de configuración</button>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var PASOS = [
+    ["escuela", "Escuela"], ["personal", "Equipo"], ["grupos", "Grupos"], ["calendario", "Calendario"], ["avisos", "Avisos"]
+  ];
+  var CLAVE_SESION = "edo_clave_dir";
+  var claveDir = "";
+  var guardados = {};
+
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function lleno(v){ return v != null && String(v).trim() !== ""; }
+
+  /* ---------------- Entrada ---------------- */
+  var inLiga = $("#liga"), inClave = $("#codigo"), err = $("#gate-error"), btn = $("#btn-entrar");
+  inLiga.value = HOJA.liga();
+  if (!inLiga.value) inLiga.focus(); else inClave.focus();
+
+  function entrar(liga, clave, silencioso){
+    btn.disabled = true; btn.textContent = "Probando conexión…"; err.textContent = "";
+    return HOJA.verificar(liga, clave).then(function(r){
+      if (!r || !r.ok) throw new Error("La hoja respondió con un error.");
+      if (r.sinCambiar) throw new Error("Falta cambiar la clave en el código de la hoja (paso 4 de la guía).");
+      if (!r.valida) throw new Error("La clave de dirección no coincide con la de la hoja.");
+      HOJA.guardarLiga(liga);
+      claveDir = clave;
+      try { sessionStorage.setItem(CLAVE_SESION, clave); } catch(e){}
+      return abrirConfiguracion();
+    }).catch(function(e){
+      if (!silencioso){
+        err.textContent = /Failed to fetch|NetworkError|Load failed|JSON/i.test(e.message)
+          ? "No se pudo conectar. Revise que el enlace termine en /exec y que el acceso sea “Cualquier persona”."
+          : e.message;
+      }
+    }).then(function(){ btn.disabled = false; btn.textContent = "Probar conexión y entrar"; });
+  }
+
+  $("#form-entrada").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var liga = inLiga.value.trim(), clave = inClave.value.trim();
+    if (!HOJA.ligaValida(liga)){ err.textContent = "El enlace debe empezar con https://script.google.com/ y terminar en /exec."; return; }
+    if (!clave){ err.textContent = "Escriba la clave de dirección."; return; }
+    entrar(liga, clave);
+  });
+
+  try {
+    var c = sessionStorage.getItem(CLAVE_SESION);
+    if (c && HOJA.liga()) { inClave.value = c; entrar(HOJA.liga(), c, true); }
+  } catch(e){}
+
+  $("#btn-salir").addEventListener("click", function(){
+    try { sessionStorage.removeItem(CLAVE_SESION); } catch(e){}
+    location.reload();
+  });
+
+  /* ---------------- Filas dinámicas ---------------- */
+  var PLANTILLAS = {
+    docentes: function(d){ d = d || {};
+      return '<div class="fila"><input aria-label="Nombre" placeholder="Nombre completo" data-f="nombre" value="' + esc(d.nombre) + '"/>' +
+             '<input aria-label="Cargo o grado" placeholder="Cargo o grado (ej. Docente de 1°)" data-f="cargo" value="' + esc(d.cargo) + '"/>' +
+             '<button class="btn-quitar" title="Quitar" aria-label="Quitar">×</button></div>'; },
+    grupos: function(g){ g = g || {};
+      return '<div class="fila tres"><input aria-label="Grado" placeholder="Grado (ej. 1°)" data-f="grado" value="' + esc(g.grado) + '"/>' +
+             '<input aria-label="Grupo" placeholder="Grupo (ej. A)" data-f="grupo" value="' + esc(g.grupo) + '"/>' +
+             '<input aria-label="Docente" placeholder="Docente a cargo" data-f="docente" value="' + esc(g.docente) + '"/>' +
+             '<button class="btn-quitar" title="Quitar" aria-label="Quitar">×</button>' +
+             '<input aria-label="Número de alumnos" placeholder="N.º de alumnos" inputmode="numeric" data-f="alumnos" value="' + esc(g.alumnos) + '"/></div>'; },
+    fechas: function(f){ f = f || {};
+      return '<div class="fila"><input aria-label="Fecha" type="date" data-f="fecha" value="' + esc(f.fecha) + '"/>' +
+             '<input aria-label="Evento" placeholder="Evento (ej. CTE, entrega de boletas)" data-f="evento" value="' + esc(f.evento) + '"/>' +
+             '<button class="btn-quitar" title="Quitar" aria-label="Quitar">×</button></div>'; },
+    avisos: function(a){ a = a || {};
+      return '<div class="fila aviso-f"><input aria-label="Título del aviso" placeholder="Título del aviso" data-f="titulo" value="' + esc(a.titulo) + '"/>' +
+             '<input aria-label="Fecha" type="date" data-f="fecha" value="' + esc(a.fecha) + '"/>' +
+             '<button class="btn-quitar" title="Quitar" aria-label="Quitar">×</button>' +
+             '<textarea aria-label="Texto del aviso" placeholder="Texto del aviso" data-f="texto">' + esc(a.texto) + '</textarea></div>'; }
+  };
+  function agregar(tipo, datos){ $("#lista-" + tipo).insertAdjacentHTML("beforeend", PLANTILLAS[tipo](datos)); }
+  function leerFilas(tipo){
+    return $$("#lista-" + tipo + " .fila").map(function(f){
+      var o = {}; $$("[data-f]", f).forEach(function(i){ o[i.getAttribute("data-f")] = i.value.trim(); }); return o;
+    }).filter(function(o){ return Object.keys(o).some(function(k){ return lleno(o[k]); }); });
+  }
+  function llenarFilas(tipo, lista){
+    $("#lista-" + tipo).innerHTML = "";
+    (lista && lista.length ? lista : [null]).forEach(function(d){ agregar(tipo, d); });
+  }
+  document.addEventListener("click", function(ev){
+    var q = ev.target.closest(".btn-quitar");
+    if (q){ q.closest(".fila").remove(); return; }
+    var a = ev.target.closest("[data-agregar]");
+    if (a){ agregar(a.getAttribute("data-agregar")); var l = $("#lista-" + a.getAttribute("data-agregar")); var u = l.lastElementChild; if (u) $("input, textarea", u).focus(); }
+  });
+
+  /* ---------------- Pasos ---------------- */
+  function pintarPasos(activo){
+    $("#pasos").innerHTML = PASOS.map(function(p, i){
+      var hecho = !!guardados["config:" + p[0]];
+      return '<button class="paso-btn' + (p[0] === activo ? " activo" : "") + (hecho ? " hecho" : "") + '" data-ir="' + p[0] + '">' +
+        '<span class="num">' + (hecho ? "✓" : i + 1) + '</span>' + p[1] + '</button>';
+    }).join("");
+  }
+  function irA(paso){
+    $$(".panel").forEach(function(s){ s.hidden = s.getAttribute("data-paso") !== paso; });
+    pintarPasos(paso);
+  }
+  $("#pasos").addEventListener("click", function(ev){ var b = ev.target.closest("[data-ir]"); if (b) irA(b.getAttribute("data-ir")); });
+
+  /* ---------------- Cargar lo guardado ---------------- */
+  function llenarFormularios(){
+    var P = HOJA.combinar(window.PORTAL, guardados);
+    $$("[data-paso=escuela] [data-k]").forEach(function(i){ i.value = P.escuela[i.getAttribute("data-k")] || ""; });
+    $("#p-dir").value = P.personal.director || "";
+    llenarFilas("docentes", P.personal.docentes);
+    llenarFilas("grupos", P.grupos);
+    $("#c-ini").value = P.calendario.inicio || "";
+    $("#c-fin").value = P.calendario.fin || "";
+    $("#c-dias").value = P.calendario.dias || "";
+    $("#c-fuente").value = P.calendario.fuente || "";
+    llenarFilas("fechas", P.calendario.fechas);
+    llenarFilas("avisos", P.avisos);
+    $("#titulo-escuela").textContent = (P.escuela.tipo ? P.escuela.tipo + " " : "") + "“" + P.escuela.nombre + "”";
+  }
+
+  function notaPublicar(){
+    var liga = HOJA.liga();
+    $("#nota-publicar").innerHTML = (window.PORTAL.ligaHoja === liga) ? "" :
+      '<div class="nota"><b>Un último paso, solo una vez:</b> la hoja ya está conectada en este dispositivo y aquí puede guardar y ver los cambios. ' +
+      'Para que <b>todos los visitantes</b> vean la información, hay que agregar este enlace al portal. Envíelo a quien administra la página:' +
+      '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center"><span class="liga-copia">' + esc(liga) + '</span>' +
+      '<button class="btn btn-sec" id="btn-copiar">Copiar enlace</button></div></div>';
+    var b = $("#btn-copiar");
+    if (b) b.addEventListener("click", function(){
+      (navigator.clipboard ? navigator.clipboard.writeText(liga) : Promise.reject()).then(function(){ b.textContent = "¡Copiado!"; }, function(){ b.textContent = "Selecciónelo y cópielo"; });
+    });
+  }
+
+  function abrirConfiguracion(){
+    return HOJA.leerTodo("config:").then(function(g){
+      guardados = g || {};
+      $("#gate").style.display = "none";
+      $("#portal").style.display = "block";
+      llenarFormularios();
+      notaPublicar();
+      irA("escuela");
+    });
+  }
+
+  /* ---------------- Guardar ---------------- */
+  var LECTORES = {
+    escuela: function(){
+      var o = {}; $$("[data-paso=escuela] [data-k]").forEach(function(i){ o[i.getAttribute("data-k")] = i.value.trim(); });
+      if (!lleno(o.nombre)) throw new Error("El nombre de la escuela no puede quedar vacío.");
+      if (!lleno(o.codigoPortal)) throw new Error("El código de acceso no puede quedar vacío.");
+      o.codigoPortal = o.codigoPortal.toUpperCase();
+      return o;
+    },
+    personal: function(){ return { director: $("#p-dir").value.trim(), docentes: leerFilas("docentes") }; },
+    grupos: function(){ return leerFilas("grupos"); },
+    calendario: function(){
+      return { inicio: $("#c-ini").value, fin: $("#c-fin").value, dias: $("#c-dias").value.trim(), fuente: $("#c-fuente").value.trim(), fechas: leerFilas("fechas") };
+    },
+    avisos: function(){ return leerFilas("avisos"); }
+  };
+
+  document.addEventListener("click", function(ev){
+    var b = ev.target.closest("[data-guardar]");
+    if (!b) return;
+    var paso = b.getAttribute("data-guardar");
+    var msg = $('[data-msg="' + paso + '"]');
+    var valor;
+    try { valor = LECTORES[paso](); } catch(e){ msg.className = "msg error"; msg.textContent = e.message; return; }
+    b.disabled = true; msg.className = "msg"; msg.textContent = "Guardando…";
+    HOJA.guardar("config:" + paso, valor, claveDir).then(function(){
+      guardados["config:" + paso] = valor;
+      msg.className = "msg ok"; msg.textContent = "Guardado. Ya se ve en el portal.";
+      if (paso === "escuela") llenarFormularios();
+      var i = PASOS.findIndex(function(p){ return p[0] === paso; });
+      pintarPasos(paso);
+      if (i < PASOS.length - 1) setTimeout(function(){ irA(PASOS[i + 1][0]); window.scrollTo({ top: 0, behavior: "smooth" }); }, 900);
+    }).catch(function(e){
+      msg.className = "msg error"; msg.textContent = "No se guardó: " + e.message;
+    }).then(function(){ b.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

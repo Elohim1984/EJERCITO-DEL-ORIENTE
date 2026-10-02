@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guía de conexión</title>
+<link rel="icon" href="escudo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css" />
+<style>
+  #portal{ display: block; }
+  ol.guia{ list-style: none; counter-reset: paso; margin: 0; padding: 0; display: grid; gap: 18px; }
+  ol.guia > li{ counter-increment: paso; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 22px 24px 22px 72px; position: relative; box-shadow: var(--shadow); }
+  ol.guia > li::before{ content: counter(paso); position: absolute; left: 22px; top: 20px; width: 34px; height: 34px; border-radius: 50%; background: var(--maroon); color: var(--surface); display: grid; place-items: center; font: 700 16px 'Fraunces', serif; }
+  ol.guia h3{ font-size: 19px; margin-bottom: 6px; }
+  ol.guia p, ol.guia li li{ color: var(--ink-soft); font-size: 15px; margin: 6px 0 0; }
+  ol.guia ul{ margin: 8px 0 0; padding-left: 20px; }
+  .ruta{ font-weight: 700; color: var(--ink); }
+  .codigo-caja{ margin-top: 12px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .codigo-caja .barra-cod{ display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; background: var(--ground); font-size: 13px; color: var(--ink-soft); }
+  .codigo-caja pre{ margin: 0; max-height: 260px; overflow: auto; padding: 14px; font: 12.5px/1.5 'IBM Plex Mono', monospace; background: var(--surface); color: var(--ink); }
+  kbd{ font: 600 13px 'IBM Plex Mono', monospace; background: var(--ground); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; color: var(--ink); }
+  @media (max-width: 520px){ ol.guia > li{ padding: 64px 18px 20px; } ol.guia > li::before{ left: 18px; top: 18px; } }
+</style>
+</head>
+<body>
+<div id="portal">
+  <header class="band">
+    <div class="band-inner">
+      <div class="band-top">
+        <img class="band-crest" src="escudo.png" alt="Logo de Telesecundarias Puebla" />
+        <div>
+          <div class="band-eyebrow">Guía para la dirección &middot; se hace una sola vez</div>
+          <h1>Conectar la hoja de Google</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="tile-rule"></div>
+
+  <main>
+    <p class="welcome">Con estos pasos la escuela tendrá su propia hoja de Google donde se guarda toda la información del portal. La información queda en el Google Drive de la escuela y es gratis. Toma unos 10 minutos. Se recomienda hacerlo desde una computadora.</p>
+
+    <ol class="guia">
+      <li>
+        <h3>Crear la hoja</h3>
+        <p>Entre a <a href="https://sheets.google.com" target="_blank" rel="noopener">sheets.google.com</a> con la cuenta de Gmail de la escuela y cree una <span class="ruta">hoja en blanco</span>. Póngale de nombre <span class="ruta">Portal escolar</span>.</p>
+      </li>
+      <li>
+        <h3>Abrir Apps Script</h3>
+        <p>En el menú de la hoja elija <span class="ruta">Extensiones → Apps Script</span>. Se abre una pestaña nueva con un editor de código.</p>
+      </li>
+      <li>
+        <h3>Pegar el código</h3>
+        <p>Borre todo lo que aparece en el editor, copie el código de abajo y péguelo.</p>
+        <div class="codigo-caja">
+          <div class="barra-cod"><span>Código de conexión</span><button class="btn btn-sec" id="btn-copiar" style="padding:6px 12px">Copiar código</button></div>
+          <pre id="codigo">Cargando código…</pre>
+        </div>
+      </li>
+      <li>
+        <h3>Poner la clave de dirección</h3>
+        <p>En la línea <kbd>const CLAVE_DIRECCION = "CAMBIA-ESTA-CLAVE";</kbd> cambie <kbd>CAMBIA-ESTA-CLAVE</kbd> por una clave que solo conozca la dirección (deje las comillas). Esa clave es la que pedirá el portal para guardar. Luego guarde con el ícono de disquete o <kbd>Ctrl</kbd> + <kbd>S</kbd>.</p>
+      </li>
+      <li>
+        <h3>Publicar la conexión</h3>
+        <p>Arriba a la derecha: <span class="ruta">Implementar → Nueva implementación</span>. Junto a "Seleccionar tipo" toque el engrane y elija <span class="ruta">Aplicación web</span>. Llene así:</p>
+        <ul>
+          <li>Descripción: <span class="ruta">Portal escolar</span></li>
+          <li>Ejecutar como: <span class="ruta">Yo</span></li>
+          <li>Quién tiene acceso: <span class="ruta">Cualquier persona</span></li>
+        </ul>
+        <p>Y toque <span class="ruta">Implementar</span>.</p>
+      </li>
+      <li>
+        <h3>Dar permiso</h3>
+        <p>Google pedirá autorización: toque <span class="ruta">Autorizar acceso</span> y elija la cuenta de la escuela. Si aparece "Google no verificó esta app", es normal porque el código es de la propia escuela: toque <span class="ruta">Configuración avanzada → Ir a Portal escolar</span> y luego <span class="ruta">Permitir</span>.</p>
+      </li>
+      <li>
+        <h3>Copiar el enlace</h3>
+        <p>Aparece la <span class="ruta">URL de la aplicación web</span>, que empieza con <kbd>https://script.google.com/macros/s/</kbd> y termina en <kbd>/exec</kbd>. Cópiela.</p>
+      </li>
+      <li>
+        <h3>Conectar el portal</h3>
+        <p>Abra <a href="configuracion.html"><b>Configuración del portal</b></a>, pegue el enlace, escriba la clave de dirección y toque <span class="ruta">Probar conexión y entrar</span>. Si entra, ya quedó: desde ahí puede llenar los datos paso a paso y cada vez que guarde se verá en el portal.</p>
+      </li>
+    </ol>
+
+    <div class="nota" style="margin-top:28px"><b>Importante:</b> no comparta la clave de dirección ni borre la pestaña "Datos" de la hoja. Si algún día se cambia el código, hay que entrar a <span class="ruta">Implementar → Gestionar implementaciones</span>, editar con el lápiz, elegir <span class="ruta">Nueva versión</span> e implementar; así el enlace sigue siendo el mismo.</div>
+
+    <div class="acciones"><a class="btn btn-pri" href="configuracion.html" style="text-decoration:none">Ir a Configuración &rarr;</a><a class="btn btn-sec" href="index.html" style="text-decoration:none">Volver al portal</a></div>
+  </main>
+</div>
+<script>
+(function(){
+  var pre = document.getElementById("codigo"), btn = document.getElementById("btn-copiar"), texto = "";
+  fetch("apps-script.gs").then(function(r){ if (!r.ok) throw 0; return r.text(); }).then(function(t){
+    texto = t; pre.textContent = t;
+  }).catch(function(){
+    pre.innerHTML = 'No se pudo mostrar aquí. Ábralo en <a href="apps-script.gs" target="_blank">apps-script.gs</a> y copie todo el texto.';
+  });
+  btn.addEventListener("click", function(){
+    if (!texto) return;
+    (navigator.clipboard ? navigator.clipboard.writeText(texto) : Promise.reject()).then(function(){
+      btn.textContent = "¡Copiado!";
+    }, function(){
+      var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = "Use Ctrl + C";
+    });
+  });
+})();
+</script>
+</body>
+</html>
