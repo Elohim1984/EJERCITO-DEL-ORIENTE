@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Configuración del portal</title>
 <link rel="icon" href="escudo.png" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icono-180.png" />
+<meta name="theme-color" content="#551313" />
+<meta name="apple-mobile-web-app-title" content="Ejército del Oriente" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -31,6 +37,7 @@
         <div style="height:14px"></div>
         <label class="gate-label" for="codigo">Clave de dirección</label>
         <input id="codigo" class="mono" type="password" autocomplete="off" placeholder="••••••••" />
+        <label class="recordar"><input type="checkbox" id="recordar" checked /> Recordarme en este dispositivo (no volver a pedir la clave)</label>
         <button class="gate-btn" type="submit" id="btn-entrar">Probar conexión y entrar</button>
         <div class="gate-error" id="gate-error" role="alert"></div>
       </form>
@@ -174,7 +181,10 @@
       if (!r.valida) throw new Error("La clave de dirección no coincide con la de la hoja.");
       HOJA.guardarLiga(liga);
       claveDir = clave;
-      try { sessionStorage.setItem(CLAVE_SESION, clave); } catch(e){}
+      try {
+        if ($("#recordar").checked) localStorage.setItem(CLAVE_SESION, clave);
+        else sessionStorage.setItem(CLAVE_SESION, clave);
+      } catch(e){}
       return abrirConfiguracion();
     }).catch(function(e){
       if (!silencioso){
@@ -194,12 +204,12 @@
   });
 
   try {
-    var c = sessionStorage.getItem(CLAVE_SESION);
+    var c = localStorage.getItem(CLAVE_SESION) || sessionStorage.getItem(CLAVE_SESION);
     if (c && HOJA.liga()) { inClave.value = c; entrar(HOJA.liga(), c, true); }
   } catch(e){}
 
   $("#btn-salir").addEventListener("click", function(){
-    try { sessionStorage.removeItem(CLAVE_SESION); } catch(e){}
+    try { sessionStorage.removeItem(CLAVE_SESION); localStorage.removeItem(CLAVE_SESION); } catch(e){}
     location.reload();
   });
 

@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Portal escolar</title>
 <link rel="icon" href="escudo.png" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icono-180.png" />
+<meta name="theme-color" content="#551313" />
+<meta name="apple-mobile-web-app-title" content="Ejército del Oriente" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -25,6 +31,7 @@
       <form class="gate-form" id="gate-form">
         <label class="gate-label" for="codigo">Código de acceso</label>
         <input id="codigo" class="mono" type="password" inputmode="text" autocomplete="off" placeholder="••••••••" autofocus />
+        <label class="recordar"><input type="checkbox" id="recordar" checked /> Recordarme en este dispositivo</label>
         <button class="gate-btn" type="submit">Entrar</button>
         <div class="gate-error" id="gate-error" role="alert"></div>
       </form>
@@ -45,6 +52,7 @@
         </div>
       </div>
       <div class="band-meta" id="band-meta"></div>
+      <a class="band-config" href="configuracion.html">&#9881; Configurar el portal <small>(solo dirección)</small></a>
     </div>
   </header>
   <div class="tile-rule"></div>
@@ -202,7 +210,7 @@
   var LLAVE = "edo_portal_ok";
 
   function mostrarPortal(){ gate.style.display = "none"; portal.style.display = "block"; }
-  try { if (sessionStorage.getItem(LLAVE) === "1") mostrarPortal(); } catch(e){}
+  try { if (localStorage.getItem(LLAVE) === "1" || sessionStorage.getItem(LLAVE) === "1") mostrarPortal(); } catch(e){}
 
   document.getElementById("gate-form").addEventListener("submit", function(ev){
     ev.preventDefault();
@@ -210,7 +218,10 @@
     if (val && val === String(P.escuela.codigoPortal).trim().toUpperCase()){
       error.textContent = "";
       input.classList.remove("error");
-      try { sessionStorage.setItem(LLAVE, "1"); } catch(e){}
+      try {
+        if (document.getElementById("recordar").checked) localStorage.setItem(LLAVE, "1");
+        else sessionStorage.setItem(LLAVE, "1");
+      } catch(e){}
       mostrarPortal();
     } else {
       input.classList.add("error");

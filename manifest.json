@@ -1,0 +1,12 @@
+{
+  "name": "Portal Ejército del Oriente",
+  "short_name": "Ejército del Oriente",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eff4f6",
+  "theme_color": "#551313",
+  "icons": [
+    { "src": "icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
