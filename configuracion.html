@@ -31,10 +31,12 @@
       <p class="gate-sub">Conecte la hoja de Google de la escuela para guardar la información directamente en el portal.</p>
 
       <form class="gate-form" id="form-entrada">
+        <div id="bloque-liga">
         <label class="gate-label" for="liga">Enlace de la hoja de Google (Apps Script)</label>
         <input id="liga" class="mono" type="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec"
                style="width:100%;font-size:13px;padding:12px 14px;border-radius:3px;border:1.5px solid var(--line);background:var(--ground);color:var(--ink);outline:none" />
         <div style="height:14px"></div>
+        </div>
         <label class="gate-label" for="codigo">Clave de dirección</label>
         <input id="codigo" class="mono" type="password" autocomplete="off" placeholder="••••••••" />
         <label class="recordar"><input type="checkbox" id="recordar" checked /> Recordarme en este dispositivo (no volver a pedir la clave)</label>
@@ -171,6 +173,13 @@
   /* ---------------- Entrada ---------------- */
   var inLiga = $("#liga"), inClave = $("#codigo"), err = $("#gate-error"), btn = $("#btn-entrar");
   inLiga.value = HOJA.liga();
+  // Si el enlace ya está fijo en el portal, la directora solo escribe su clave
+  if (window.PORTAL.ligaHoja){
+    $("#bloque-liga").hidden = true;
+    $(".gate-sub").textContent = "Escriba su clave de dirección para llenar la información del portal.";
+    $(".gate-note").innerHTML = '<a href="index.html">Volver al portal</a>';
+    $("#btn-entrar").textContent = "Entrar";
+  }
   if (!inLiga.value) inLiga.focus(); else inClave.focus();
 
   function entrar(liga, clave, silencioso){
@@ -192,7 +201,7 @@
           ? "No se pudo conectar. Revise que el enlace termine en /exec y que el acceso sea “Cualquier persona”."
           : e.message;
       }
-    }).then(function(){ btn.disabled = false; btn.textContent = "Probar conexión y entrar"; });
+    }).then(function(){ btn.disabled = false; btn.textContent = window.PORTAL.ligaHoja ? "Entrar" : "Probar conexión y entrar"; });
   }
 
   $("#form-entrada").addEventListener("submit", function(ev){
