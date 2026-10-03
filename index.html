@@ -29,7 +29,7 @@
       <p class="gate-sub js-subtitulo"></p>
 
       <form class="gate-form" id="gate-form">
-        <label class="gate-label" for="codigo">Código de acceso</label>
+        <label class="gate-label" for="codigo">Clave de acceso</label>
         <input id="codigo" class="mono" type="password" inputmode="text" autocomplete="off" placeholder="••••••••" autofocus />
         <label class="recordar"><input type="checkbox" id="recordar" checked /> Recordarme en este dispositivo</label>
         <button class="gate-btn" type="submit">Entrar</button>
@@ -167,7 +167,6 @@
       var pasos = [
         ["Hoja de Google conectada", !!HOJA.liga()],
         ["Datos de la escuela (CCT, turno, localidad…)", lleno(E.cct) && lleno(E.turno) && lleno(E.localidad) && lleno(E.municipio)],
-        ["Código de acceso propio", String(E.codigoPortal).toUpperCase() !== "ORIENTE2026"],
         ["Director y docentes", lleno(per.director) && (per.docentes || []).length > 0],
         ["Grupos", grupos.length > 0],
         ["Calendario confirmado", !!G["config:calendario"]],
@@ -212,23 +211,30 @@
   function mostrarPortal(){ gate.style.display = "none"; portal.style.display = "block"; }
   try { if (localStorage.getItem(LLAVE) === "1" || sessionStorage.getItem(LLAVE) === "1") mostrarPortal(); } catch(e){}
 
+  var btnEntrar = document.querySelector(".gate-btn");
   document.getElementById("gate-form").addEventListener("submit", function(ev){
     ev.preventDefault();
     var val = (input.value || "").trim().toUpperCase();
-    if (val && val === String(P.escuela.codigoPortal).trim().toUpperCase()){
-      error.textContent = "";
+    if (!val){ error.textContent = "Escriba la clave."; input.focus(); return; }
+    btnEntrar.disabled = true; btnEntrar.textContent = "Entrando…"; error.textContent = "";
+    HOJA.verificar(HOJA.liga(), val).then(function(r){
+      if (!r || !r.ok || !r.valida) throw new Error("clave");
       input.classList.remove("error");
+      // Una sola clave para todo: también abre Configuración y Control Escolar sin volver a pedirla
       try {
-        if (document.getElementById("recordar").checked) localStorage.setItem(LLAVE, "1");
-        else sessionStorage.setItem(LLAVE, "1");
+        var almacen = document.getElementById("recordar").checked ? localStorage : sessionStorage;
+        almacen.setItem(LLAVE, "1");
+        almacen.setItem("edo_clave_dir", val);
       } catch(e){}
       mostrarPortal();
-    } else {
+    }).catch(function(e){
       input.classList.add("error");
-      error.textContent = "Código incorrecto. Verifica con la dirección de la escuela.";
+      error.textContent = e.message === "clave"
+        ? "Clave incorrecta. Verifique con la dirección de la escuela."
+        : "No se pudo comprobar la clave. Revise su internet e intente de nuevo.";
       input.value = "";
       input.focus();
-    }
+    }).then(function(){ btnEntrar.disabled = false; btnEntrar.textContent = "Entrar"; });
   });
 })();
 </script>

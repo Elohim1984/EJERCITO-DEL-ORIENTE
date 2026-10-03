@@ -5,7 +5,7 @@ Se va completando poco a poco: cada herramienta aparece como **En preparación**
 
 ## Cómo entrar
 
-- Código de acceso provisional: `ORIENTE2026`. Cámbienlo antes de compartir la página.
+- Una sola clave para todo (portal, Configuración y Control Escolar): la `CLAVE_DIRECCION` del Apps Script de la escuela. Se escribe una vez y el dispositivo la recuerda.
 
 ## Cómo se llena la información
 

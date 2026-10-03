@@ -90,8 +90,6 @@
         <div class="campo"><label for="e-tel">Teléfono</label><input id="e-tel" data-k="telefono" type="tel" /></div>
         <div class="campo"><label for="e-mail">Correo de la escuela</label><input id="e-mail" data-k="correo" type="email" /></div>
         <div class="campo"><label for="e-ciclo">Ciclo escolar</label><input id="e-ciclo" data-k="ciclo" placeholder="2026–2027" /></div>
-        <div class="campo"><label for="e-cod">Código de acceso del portal</label><input id="e-cod" data-k="codigoPortal" class="mono" />
-          <small>Es el código que usan docentes y familias para entrar. Escríbalo en mayúsculas.</small></div>
       </div>
       <div class="acciones"><button class="btn btn-pri" data-guardar="escuela">Guardar datos de la escuela</button><span class="msg" data-msg="escuela"></span></div>
     </section>
@@ -320,8 +318,6 @@
     escuela: function(){
       var o = {}; $$("[data-paso=escuela] [data-k]").forEach(function(i){ o[i.getAttribute("data-k")] = i.value.trim(); });
       if (!lleno(o.nombre)) throw new Error("El nombre de la escuela no puede quedar vacío.");
-      if (!lleno(o.codigoPortal)) throw new Error("El código de acceso no puede quedar vacío.");
-      o.codigoPortal = o.codigoPortal.toUpperCase();
       return o;
     },
     personal: function(){ return { director: $("#p-dir").value.trim(), docentes: leerFilas("docentes") }; },
