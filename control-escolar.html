@@ -12,48 +12,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilos.css" />
+<link rel="stylesheet" href="control-escolar.css" />
 <script src="config.js"></script>
 <script src="datos.js"></script>
-<style>
-  .barra-filtros{ display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; margin-bottom: 20px; }
-  .barra-filtros .campo{ min-width: 180px; }
-  .tabla-alumnos{ width: 100%; border-collapse: collapse; font-size: 16px; }
-  .tabla-alumnos th{ text-align: left; font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); padding: 10px 8px; border-bottom: 2px solid var(--line); }
-  .tabla-alumnos td{ padding: 12px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  .tabla-alumnos td.num{ font-family: 'IBM Plex Mono', monospace; color: var(--ink-soft); width: 36px; }
-  .tabla-alumnos .sub{ display: block; font-size: 13px; color: var(--ink-soft); }
-  .tabla-scroll{ overflow-x: auto; }
-  .btn-mini{ font: 600 14px 'Public Sans', sans-serif; border: 1.5px solid var(--line); background: var(--surface); color: var(--maroon); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
-  .btn-mini.peligro{ color: var(--terracotta); }
-  .asis-fila{ display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; padding: 12px 4px; border-bottom: 1px solid var(--line); }
-  .asis-fila .num{ font-family: 'IBM Plex Mono', monospace; color: var(--ink-soft); }
-  .asis-fila .nom{ font-size: 16.5px; }
-  .opciones{ display: flex; gap: 6px; }
-  .op{ width: 52px; height: 48px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-soft); font: 700 17px 'Public Sans', sans-serif; cursor: pointer; }
-  .op[aria-pressed="true"][data-v="A"]{ background: var(--green); border-color: var(--green); color: #fff; }
-  .op[aria-pressed="true"][data-v="F"]{ background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
-  .op[aria-pressed="true"][data-v="R"]{ background: var(--ochre); border-color: var(--ochre); color: #fff; }
-  .op[aria-pressed="true"][data-v="J"]{ background: #4b6f95; border-color: #4b6f95; color: #fff; }
-  .leyenda{ display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--ink-soft); margin: 4px 0 12px; }
-  .leyenda b{ color: var(--ink); }
-  .conteo{ font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--ink-soft); }
-  .pct-bajo{ color: var(--terracotta); font-weight: 700; }
-  .formulario-alumno{ border: 1.5px solid var(--ochre); border-radius: 6px; padding: 20px; margin-bottom: 20px; background: color-mix(in srgb, var(--ochre) 5%, var(--surface)); }
-  .formulario-alumno h3{ font-size: 19px; margin-bottom: 14px; }
-  textarea.pegar{ width: 100%; min-height: 160px; font: 16px 'IBM Plex Mono', monospace; padding: 12px; border-radius: 4px; border: 1.5px solid var(--line); background: var(--ground); color: var(--ink); }
-  @media print{
-    header.band, .tile-rule, #pestanas, .barra-filtros button, .acciones, footer{ display: none !important; }
-    .panel{ box-shadow: none; border: none; padding: 0; }
-    body{ background: #fff; }
-  }
-  @media (max-width: 560px){
-    .asis-fila{ grid-template-columns: 1fr; }
-    .asis-fila .num{ display: none; }
-    .op{ flex: 1; width: auto; }
-    .opciones{ width: 100%; }
-    .tabla-alumnos .ocultar-movil{ display: none; }
-  }
-</style>
 </head>
 <body>
 
@@ -62,11 +23,11 @@
     <div class="tile-rule"></div>
     <div class="gate-body">
       <img class="crest" src="escudo.png" alt="Logo de Telesecundarias Puebla" />
-      <div class="gate-eyebrow">Solo dirección y docentes</div>
+      <div class="gate-eyebrow">Solo personal de la escuela</div>
       <h1 class="gate-title">Control Escolar</h1>
-      <p class="gate-sub" id="gate-sub">Escriba la clave de dirección para entrar.</p>
+      <p class="gate-sub" id="gate-sub">Escriba la clave para entrar.</p>
       <form class="gate-form" id="form-entrada">
-        <label class="gate-label" for="codigo">Clave de dirección</label>
+        <label class="gate-label" for="codigo">Clave de acceso</label>
         <input id="codigo" class="mono" type="password" autocomplete="off" placeholder="••••••••" />
         <label class="recordar"><input type="checkbox" id="recordar" checked /> Recordarme en este dispositivo</label>
         <button class="gate-btn" type="submit" id="btn-entrar">Entrar</button>
@@ -78,460 +39,36 @@
 </div>
 
 <div id="portal">
-  <header class="band">
+  <header class="band ce-band">
     <div class="band-inner">
       <div class="band-top">
         <img class="band-crest" src="escudo.png" alt="Logo de Telesecundarias Puebla" />
         <div>
-          <div class="band-eyebrow">Control Escolar</div>
+          <div class="band-eyebrow">Control Escolar &middot; ciclo <span id="ciclo"></span></div>
           <h1 id="titulo-escuela">Control Escolar</h1>
         </div>
       </div>
-      <a class="band-config" href="index.html">&larr; Volver al portal</a>
+      <div class="ce-band-acciones">
+        <a class="band-config" href="index.html">&larr; Portal</a>
+        <button class="band-config" id="btn-salir" type="button">Salir</button>
+      </div>
     </div>
   </header>
+
+  <nav class="ce-nav" id="nav-grupos" aria-label="Secciones"></nav>
+  <nav class="ce-subnav" id="nav-tabs" aria-label="Pestañas" hidden></nav>
   <div class="tile-rule"></div>
 
-  <main>
-    <nav class="pasos" id="pestanas" aria-label="Secciones">
-      <button class="paso-btn activo" data-tab="asistencia"><span class="num">✓</span>Pasar lista</button>
-      <button class="paso-btn" data-tab="alumnos"><span class="num">👤</span>Alumnos</button>
-      <button class="paso-btn" data-tab="resumen"><span class="num">%</span>Resumen del mes</button>
-    </nav>
-
-    <div id="aviso-grupos"></div>
-
-    <!-- ============ Pasar lista ============ -->
-    <section class="panel" data-tab="asistencia">
-      <h2>Pasar lista</h2>
-      <p class="ayuda">Elija el grupo y la fecha. Todos aparecen con asistencia; solo toque a quien faltó o llegó tarde y luego <b>Guardar lista</b>.</p>
-      <div class="barra-filtros">
-        <div class="campo"><label for="a-grupo">Grupo</label><select id="a-grupo" class="js-grupos"></select></div>
-        <div class="campo"><label for="a-fecha">Fecha</label><input id="a-fecha" type="date" /></div>
-      </div>
-      <div class="leyenda"><span><b>A</b> Asistencia</span><span><b>F</b> Falta</span><span><b>R</b> Retardo</span><span><b>J</b> Falta justificada</span></div>
-      <div id="lista-asistencia"></div>
-      <div class="acciones">
-        <button class="btn btn-pri" id="btn-guardar-asis">Guardar lista</button>
-        <span class="conteo" id="conteo-asis"></span>
-        <span class="msg" id="msg-asis"></span>
-      </div>
-    </section>
-
-    <!-- ============ Alumnos ============ -->
-    <section class="panel" data-tab="alumnos" hidden>
-      <h2>Alumnos</h2>
-      <p class="ayuda">Registre a los alumnos de cada grupo. Puede agregarlos uno por uno o pegar la lista completa.</p>
-      <div class="barra-filtros">
-        <div class="campo"><label for="f-grupo">Ver grupo</label><select id="f-grupo" class="js-grupos" data-todos="1"></select></div>
-        <div class="campo"><label for="f-buscar">Buscar</label><input id="f-buscar" placeholder="Nombre o CURP" /></div>
-        <button class="btn btn-pri" id="btn-nuevo">+ Agregar alumno</button>
-        <button class="btn btn-sec" id="btn-pegar">Pegar lista</button>
-      </div>
-
-      <div class="formulario-alumno" id="form-alumno" hidden>
-        <h3 id="form-titulo">Nuevo alumno</h3>
-        <div class="campos">
-          <div class="campo"><label for="al-ap">Apellido paterno</label><input id="al-ap" data-a="apPaterno" /></div>
-          <div class="campo"><label for="al-am">Apellido materno</label><input id="al-am" data-a="apMaterno" /></div>
-          <div class="campo"><label for="al-nom">Nombre(s)</label><input id="al-nom" data-a="nombres" /></div>
-          <div class="campo"><label for="al-grupo">Grupo</label><select id="al-grupo" class="js-grupos" data-a="grupo"></select></div>
-          <div class="campo"><label for="al-curp">CURP</label><input id="al-curp" data-a="curp" class="mono" maxlength="18" /></div>
-          <div class="campo"><label for="al-sexo">Sexo</label><select id="al-sexo" data-a="sexo"><option value="">—</option><option value="H">Hombre</option><option value="M">Mujer</option></select></div>
-          <div class="campo"><label for="al-nac">Fecha de nacimiento</label><input id="al-nac" type="date" data-a="nacimiento" /></div>
-          <div class="campo"><label for="al-tutor">Madre, padre o tutor</label><input id="al-tutor" data-a="tutor" /></div>
-          <div class="campo"><label for="al-tel">Teléfono del tutor</label><input id="al-tel" type="tel" data-a="telefono" /></div>
-        </div>
-        <div class="acciones">
-          <button class="btn btn-pri" id="btn-guardar-alumno">Guardar alumno</button>
-          <button class="btn btn-sec" id="btn-cancelar">Cancelar</button>
-          <span class="msg" id="msg-alumno"></span>
-        </div>
-      </div>
-
-      <div class="formulario-alumno" id="form-pegar" hidden>
-        <h3>Pegar lista de alumnos</h3>
-        <p class="ayuda" style="margin-top:0">Un alumno por renglón, con apellidos primero: <span class="mono">PÉREZ LÓPEZ JUAN CARLOS</span>. También puede copiar y pegar las columnas desde Excel (apellido paterno, apellido materno, nombre).</p>
-        <div class="campos" style="margin-bottom:12px"><div class="campo"><label for="p-grupo">Grupo</label><select id="p-grupo" class="js-grupos"></select></div></div>
-        <textarea class="pegar" id="p-texto" placeholder="PÉREZ LÓPEZ JUAN CARLOS&#10;GARCÍA HERNÁNDEZ MARÍA FERNANDA"></textarea>
-        <div class="acciones">
-          <button class="btn btn-pri" id="btn-agregar-lista">Agregar a la lista</button>
-          <button class="btn btn-sec" id="btn-cancelar-pegar">Cancelar</button>
-          <span class="msg" id="msg-pegar"></span>
-        </div>
-      </div>
-
-      <div id="msg-lista" class="acciones" style="margin:0 0 14px"></div>
-      <div id="aviso-duplicados"></div>
-      <div class="tabla-scroll"><table class="tabla-alumnos">
-        <thead><tr><th>#</th><th>Alumno</th><th class="ocultar-movil">Grupo</th><th class="ocultar-movil">Tutor</th><th></th></tr></thead>
-        <tbody id="tabla-alumnos"></tbody>
-      </table></div>
-      <p class="conteo" id="conteo-alumnos" style="margin-top:12px"></p>
-    </section>
-
-    <!-- ============ Resumen ============ -->
-    <section class="panel" data-tab="resumen" hidden>
-      <h2>Resumen del mes</h2>
-      <p class="ayuda">Asistencias, faltas y retardos de cada alumno en el mes. En rojo los alumnos con menos de 80% de asistencia.</p>
-      <div class="barra-filtros">
-        <div class="campo"><label for="r-grupo">Grupo</label><select id="r-grupo" class="js-grupos"></select></div>
-        <div class="campo"><label for="r-mes">Mes</label><input id="r-mes" type="month" /></div>
-        <button class="btn btn-sec" id="btn-imprimir">Imprimir</button>
-      </div>
-      <div class="tabla-scroll"><table class="tabla-alumnos">
-        <thead><tr><th>#</th><th>Alumno</th><th>A</th><th>F</th><th>R</th><th>J</th><th>% asist.</th></tr></thead>
-        <tbody id="tabla-resumen"></tbody>
-      </table></div>
-      <p class="conteo" id="dias-resumen" style="margin-top:12px"></p>
-    </section>
+  <main class="ce-main">
+    <div id="vista"></div>
   </main>
 </div>
 
-<script>
-(function(){
-  var CLAVE_LS = "edo_clave_dir";
-  var clave = "";
-  var P = HOJA.combinar(window.PORTAL, null);
-  var alumnos = [];        // [{id, apPaterno, apMaterno, nombres, grupo, ...}]
-  var editando = null;
+<div id="toast" class="ce-toast" role="status" aria-live="polite"></div>
 
-  function $(s, r){ return (r || document).querySelector(s); }
-  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
-  function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
-  function lleno(v){ return v != null && String(v).trim() !== ""; }
-  function hoyISO(){ var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); }
-  function nuevoId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
-  function nombreGrupo(g){ return (g.grado || "") + (lleno(g.grupo) ? " “" + g.grupo + "”" : ""); }
-  function idGrupo(g){ return ((g.grado || "") + "-" + (g.grupo || "")).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "").toUpperCase() || "SINGRUPO"; }
-  function nombreCompleto(a){ return [a.apPaterno, a.apMaterno, a.nombres].filter(lleno).join(" "); }
-  function ordenar(lista){ return lista.slice().sort(function(a, b){ return nombreCompleto(a).localeCompare(nombreCompleto(b), "es"); }); }
-  function delGrupo(gid){ return ordenar(alumnos.filter(function(a){ return a.grupo === gid; })); }
-  function normal(t){ return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/\s+/g, " ").trim(); }
-  function claveNombre(a){ return normal(nombreCompleto(a)); }
-  // Busca si ya existe otro alumno con la misma CURP o el mismo nombre completo
-  function buscarDuplicado(a, lista){
-    return (lista || alumnos).find(function(x){
-      if (x.id === a.id) return false;
-      if (lleno(a.curp) && normal(x.curp) === normal(a.curp)) return true;
-      return claveNombre(x) === claveNombre(a);
-    });
-  }
-  // Vuelve a leer la lista desde la hoja (por si otra persona agregó alumnos desde otro celular)
-  function refrescarAlumnos(){
-    return HOJA.leerPrivado("alumno:", clave).then(function(r){
-      alumnos = Object.keys(r).map(function(k){ return r[k]; }).filter(function(a){ return a && a.id; });
-    }).catch(function(){});
-  }
-  function grupos(){ return (P.grupos || []).filter(function(g){ return lleno(g.grado); }); }
-
-  /* ---------------- Entrada ---------------- */
-  var err = $("#gate-error"), btn = $("#btn-entrar");
-
-  function entrar(c, silencioso){
-    if (!HOJA.liga()){ err.textContent = "Primero hay que conectar la hoja de Google en Configuración."; return Promise.resolve(); }
-    btn.disabled = true; btn.textContent = "Entrando…"; err.textContent = "";
-    return HOJA.verificar(HOJA.liga(), c).then(function(r){
-      if (!r || !r.ok || !r.valida) throw new Error("La clave no es correcta.");
-      return HOJA.version();
-    }).then(function(v){
-      if (v < 2) throw new Error("Falta actualizar el código de la hoja de Google para proteger los datos de los alumnos. Avise a quien administra el portal.");
-      clave = c;
-      try { if ($("#recordar").checked) localStorage.setItem(CLAVE_LS, c); else sessionStorage.setItem(CLAVE_LS, c); } catch(e){}
-      return abrir();
-    }).catch(function(e){
-      if (!silencioso) err.textContent = /fetch|Network|Load failed|JSON/i.test(e.message) ? "No se pudo conectar con la hoja de la escuela. Revise su internet." : e.message;
-    }).then(function(){ btn.disabled = false; btn.textContent = "Entrar"; });
-  }
-  $("#form-entrada").addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var c = $("#codigo").value.trim();
-    if (!c){ err.textContent = "Escriba la clave."; return; }
-    entrar(c);
-  });
-  try {
-    var guardada = localStorage.getItem(CLAVE_LS) || sessionStorage.getItem(CLAVE_LS);
-    if (guardada){ $("#codigo").value = guardada; $("#gate-sub").textContent = "Abriendo…"; entrar(guardada, true).then(function(){ $("#gate-sub").textContent = "Escriba la clave de dirección para entrar."; }); }
-  } catch(e){}
-
-  function abrir(){
-    return Promise.all([HOJA.leerTodo("config:"), HOJA.leerPrivado("alumno:", clave)]).then(function(r){
-      P = HOJA.combinar(window.PORTAL, r[0]);
-      alumnos = Object.keys(r[1]).map(function(k){ return r[1][k]; }).filter(function(a){ return a && a.id; });
-      $("#gate").style.display = "none";
-      $("#portal").style.display = "block";
-      $("#titulo-escuela").textContent = (P.escuela.tipo ? P.escuela.tipo + " " : "") + "“" + P.escuela.nombre + "”";
-      llenarGrupos();
-      $("#a-fecha").value = hoyISO();
-      $("#r-mes").value = hoyISO().slice(0, 7);
-      pintarAlumnos();
-      cargarAsistencia();
-    });
-  }
-
-  function llenarGrupos(){
-    var gs = grupos();
-    $("#aviso-grupos").innerHTML = gs.length ? "" :
-      '<div class="nota"><b>Primero registre los grupos</b> en <a href="configuracion.html">Configuración → Grupos</a>. Después regrese aquí para agregar alumnos.</div>';
-    $$(".js-grupos").forEach(function(sel){
-      var actual = sel.value;
-      sel.innerHTML = (sel.getAttribute("data-todos") ? '<option value="">Todos los grupos</option>' : "") +
-        gs.map(function(g){ return '<option value="' + esc(idGrupo(g)) + '">' + esc(nombreGrupo(g)) + '</option>'; }).join("");
-      if (actual) sel.value = actual;
-    });
-  }
-  function textoGrupo(gid){
-    var g = grupos().find(function(x){ return idGrupo(x) === gid; });
-    return g ? nombreGrupo(g) : "Sin grupo";
-  }
-
-  /* ---------------- Pestañas ---------------- */
-  $("#pestanas").addEventListener("click", function(ev){
-    var b = ev.target.closest("[data-tab]"); if (!b) return;
-    var t = b.getAttribute("data-tab");
-    $$("#pestanas .paso-btn").forEach(function(x){ x.classList.toggle("activo", x === b); });
-    $$("section.panel").forEach(function(s){ s.hidden = s.getAttribute("data-tab") !== t; });
-    if (t === "asistencia") cargarAsistencia();
-    if (t === "resumen") cargarResumen();
-  });
-
-  /* ---------------- Alumnos ---------------- */
-  function pintarAlumnos(){
-    var gid = $("#f-grupo").value, q = $("#f-buscar").value.trim().toLowerCase();
-    var lista = ordenar(alumnos).filter(function(a){
-      return (!gid || a.grupo === gid) && (!q || (nombreCompleto(a) + " " + (a.curp || "")).toLowerCase().indexOf(q) >= 0);
-    });
-    $("#tabla-alumnos").innerHTML = lista.length ? lista.map(function(a, i){
-      return '<tr><td class="num">' + (i + 1) + '</td><td>' + esc(nombreCompleto(a)) +
-        (lleno(a.curp) ? '<span class="sub mono">' + esc(a.curp) + '</span>' : '') + '</td>' +
-        '<td class="ocultar-movil">' + esc(textoGrupo(a.grupo)) + '</td>' +
-        '<td class="ocultar-movil">' + esc(a.tutor || "") + (lleno(a.telefono) ? '<span class="sub">' + esc(a.telefono) + '</span>' : '') + '</td>' +
-        '<td style="white-space:nowrap"><button class="btn-mini" data-editar="' + esc(a.id) + '">Editar</button> ' +
-        '<button class="btn-mini peligro" data-eliminar="' + esc(a.id) + '">Eliminar</button></td></tr>';
-    }).join("") : '<tr><td colspan="5" class="vacio" style="padding:20px 8px">Todavía no hay alumnos' + (gid ? " en este grupo" : "") + '.</td></tr>';
-    var total = gid ? alumnos.filter(function(a){ return a.grupo === gid; }).length : alumnos.length;
-    $("#conteo-alumnos").textContent = total + (total === 1 ? " alumno" : " alumnos") + (gid ? " en " + textoGrupo(gid) : " en total");
-    revisarDuplicados();
-  }
-
-  // Muestra un aviso si ya hay alumnos repetidos (mismo nombre o misma CURP) para que se borre el que sobra
-  function revisarDuplicados(){
-    var porClave = {};
-    alumnos.forEach(function(a){
-      [ "N:" + claveNombre(a), lleno(a.curp) ? "C:" + normal(a.curp) : null ].forEach(function(k){
-        if (!k) return; (porClave[k] = porClave[k] || []).push(a);
-      });
-    });
-    var vistos = {}, repetidos = [];
-    Object.keys(porClave).forEach(function(k){
-      var g = porClave[k]; if (g.length < 2) return;
-      var firma = g.map(function(a){ return a.id; }).sort().join(",");
-      if (vistos[firma]) return; vistos[firma] = 1; repetidos.push(g);
-    });
-    $("#aviso-duplicados").innerHTML = repetidos.length ?
-      '<div class="nota" style="border-color:var(--terracotta)"><b>Hay alumnos registrados dos veces.</b> Revise cuál está bien y elimine el otro:' +
-      repetidos.map(function(g){
-        return '<div style="margin-top:12px">' + g.map(function(a){
-          return '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 0"><span style="flex:1;min-width:220px">' + esc(nombreCompleto(a)) +
-            ' &middot; ' + esc(textoGrupo(a.grupo)) + (lleno(a.curp) ? ' &middot; <span class="mono">' + esc(a.curp) + '</span>' : '') + '</span>' +
-            '<button class="btn-mini" data-editar="' + esc(a.id) + '">Editar</button><button class="btn-mini peligro" data-eliminar="' + esc(a.id) + '">Eliminar</button></div>';
-        }).join("") + '</div>';
-      }).join("") + '</div>' : "";
-  }
-  $("#f-grupo").addEventListener("change", pintarAlumnos);
-  $("#f-buscar").addEventListener("input", pintarAlumnos);
-
-  function abrirFormulario(a){
-    editando = a ? a.id : null;
-    $("#form-pegar").hidden = true;
-    $("#form-alumno").hidden = false;
-    $("#msg-lista").innerHTML = "";
-    $("#form-titulo").textContent = a ? "Editar alumno" : "Nuevo alumno";
-    $("#msg-alumno").textContent = "";
-    $$("#form-alumno [data-a]").forEach(function(i){ i.value = a ? (a[i.getAttribute("data-a")] || "") : ""; });
-    if (!a && $("#f-grupo").value) $("#al-grupo").value = $("#f-grupo").value;
-    $("#al-ap").focus();
-  }
-  $("#btn-nuevo").addEventListener("click", function(){ abrirFormulario(null); });
-  $("#btn-cancelar").addEventListener("click", function(){ $("#form-alumno").hidden = true; });
-  $("#btn-pegar").addEventListener("click", function(){
-    $("#form-alumno").hidden = true; $("#form-pegar").hidden = false; $("#msg-pegar").textContent = "";
-    if ($("#f-grupo").value) $("#p-grupo").value = $("#f-grupo").value;
-    $("#p-texto").focus();
-  });
-  $("#btn-cancelar-pegar").addEventListener("click", function(){ $("#form-pegar").hidden = true; });
-
-  var guardandoAlumno = false;
-  $("#btn-guardar-alumno").addEventListener("click", function(){
-    if (guardandoAlumno) return;          // evita que un doble clic guarde dos veces
-    var b = this, msg = $("#msg-alumno");
-    var a = editando ? JSON.parse(JSON.stringify(alumnos.find(function(x){ return x.id === editando; }))) : { id: nuevoId() };
-    $$("#form-alumno [data-a]").forEach(function(i){ a[i.getAttribute("data-a")] = i.value.trim(); });
-    a.apPaterno = normal(a.apPaterno); a.apMaterno = normal(a.apMaterno); a.nombres = normal(a.nombres); a.curp = normal(a.curp).replace(/\s/g, "");
-    if (!lleno(a.apPaterno) || !lleno(a.nombres)){ msg.className = "msg error"; msg.textContent = "Escriba al menos el apellido paterno y el nombre."; return; }
-    if (!lleno(a.grupo)){ msg.className = "msg error"; msg.textContent = "Elija el grupo."; return; }
-    if (lleno(a.curp) && a.curp.length !== 18){ msg.className = "msg error"; msg.textContent = "La CURP debe tener 18 caracteres."; return; }
-    guardandoAlumno = true; b.disabled = true; msg.className = "msg"; msg.textContent = "Revisando…";
-    refrescarAlumnos().then(function(){
-      var dup = buscarDuplicado(a);
-      if (dup){
-        var porCurp = lleno(a.curp) && normal(dup.curp) === a.curp;
-        msg.className = "msg error";
-        msg.innerHTML = "No se guardó: " + (porCurp ? "esa CURP ya es de " : "ya está registrado ") + "<b>" + esc(nombreCompleto(dup)) + "</b> en " + esc(textoGrupo(dup.grupo)) +
-          '. <button class="btn-mini" data-editar="' + esc(dup.id) + '">Abrir el registro que ya existe</button>';
-        pintarAlumnos();
-        return;
-      }
-      msg.textContent = "Guardando…";
-      return HOJA.guardar("alumno:" + a.id, a, clave).then(function(){
-        var i = alumnos.findIndex(function(x){ return x.id === a.id; });
-        if (i >= 0) alumnos[i] = a; else alumnos.push(a);
-        var eraNuevo = !editando;
-        $("#form-alumno").hidden = true; editando = null;
-        $("#f-grupo").value = a.grupo; pintarAlumnos();
-        $("#msg-lista").innerHTML = '<span class="msg ok">✓ ' + (eraNuevo ? "Se agregó a " : "Se guardaron los cambios de ") + esc(nombreCompleto(a)) + '.</span>' +
-          (eraNuevo ? ' <button class="btn btn-sec" id="btn-otro">+ Agregar otro alumno</button>' : '');
-        var otro = $("#btn-otro");
-        if (otro) otro.addEventListener("click", function(){ var g = a.grupo; abrirFormulario(null); $("#al-grupo").value = g; });
-      });
-    }).catch(function(e){ msg.className = "msg error"; msg.textContent = "No se guardó: " + e.message; })
-      .then(function(){ guardandoAlumno = false; b.disabled = false; });
-  });
-
-  document.addEventListener("click", function(ev){
-    var e = ev.target.closest("[data-editar]");
-    if (e){ abrirFormulario(alumnos.find(function(x){ return x.id === e.getAttribute("data-editar"); })); window.scrollTo({ top: $("#form-alumno").offsetTop - 20, behavior: "smooth" }); return; }
-    var d = ev.target.closest("[data-eliminar]");
-    if (d){
-      var a = alumnos.find(function(x){ return x.id === d.getAttribute("data-eliminar"); });
-      if (!a || !confirm("¿Eliminar a " + nombreCompleto(a) + " de la lista?\n\nSus asistencias anteriores se conservan.")) return;
-      d.disabled = true;
-      HOJA.borrar("alumno:" + a.id, clave).then(function(){
-        alumnos = alumnos.filter(function(x){ return x.id !== a.id; }); pintarAlumnos();
-      }).catch(function(err){ alert("No se pudo eliminar: " + err.message); d.disabled = false; });
-    }
-  });
-
-  /* Pegar lista */
-  function partirRenglon(r){
-    var partes = r.split(/\t|,|;/).map(function(x){ return x.trim(); }).filter(lleno);
-    if (partes.length >= 3) return { apPaterno: partes[0], apMaterno: partes[1], nombres: partes.slice(2).join(" ") };
-    var p = r.trim().split(/\s+/);
-    if (p.length >= 3) return { apPaterno: p[0], apMaterno: p[1], nombres: p.slice(2).join(" ") };
-    if (p.length === 2) return { apPaterno: p[0], apMaterno: "", nombres: p[1] };
-    return null;
-  }
-  var guardandoLista = false;
-  $("#btn-agregar-lista").addEventListener("click", function(){
-    if (guardandoLista) return;
-    var b = this, msg = $("#msg-pegar"), gid = $("#p-grupo").value;
-    if (!gid){ msg.className = "msg error"; msg.textContent = "Elija el grupo."; return; }
-    var leidos = $("#p-texto").value.split(/\r?\n/).map(partirRenglon).filter(Boolean);
-    if (!leidos.length){ msg.className = "msg error"; msg.textContent = "No encontré nombres. Escriba un alumno por renglón."; return; }
-    guardandoLista = true; b.disabled = true; msg.className = "msg"; msg.textContent = "Revisando la lista…";
-    refrescarAlumnos().then(function(){
-      var existentes = {}, nuevos = [], omitidos = [];
-      alumnos.forEach(function(a){ existentes[claveNombre(a)] = a; });
-      leidos.forEach(function(x){
-        var a = { id: nuevoId(), apPaterno: normal(x.apPaterno), apMaterno: normal(x.apMaterno), nombres: normal(x.nombres), grupo: gid,
-                  curp: "", sexo: "", nacimiento: "", tutor: "", telefono: "" };
-        var k = claveNombre(a);
-        if (existentes[k]){ omitidos.push(nombreCompleto(a)); return; }
-        existentes[k] = a; nuevos.push(a);
-      });
-      var hechos = 0, fallos = 0, cadena = Promise.resolve();
-      nuevos.forEach(function(a){
-        cadena = cadena.then(function(){
-          msg.className = "msg"; msg.textContent = "Guardando " + (hechos + fallos + 1) + " de " + nuevos.length + "…";
-          return HOJA.guardar("alumno:" + a.id, a, clave).then(function(){ hechos++; alumnos.push(a); }, function(){ fallos++; });
-        });
-      });
-      return cadena.then(function(){
-        $("#f-grupo").value = gid; pintarAlumnos();
-        var partes = [hechos + (hechos === 1 ? " alumno agregado" : " alumnos agregados")];
-        if (omitidos.length) partes.push(omitidos.length + " ya estaban registrados y no se repitieron (" + omitidos.join(", ") + ")");
-        if (fallos) partes.push(fallos + " no se pudieron guardar; vuelva a pegarlos");
-        msg.className = fallos ? "msg error" : "msg ok";
-        msg.textContent = partes.join(". ") + ".";
-        if (!fallos) $("#p-texto").value = "";
-      });
-    }).catch(function(e){ msg.className = "msg error"; msg.textContent = e.message; })
-      .then(function(){ guardandoLista = false; b.disabled = false; });
-  });
-
-  /* ---------------- Pasar lista ---------------- */
-  var marcas = {};
-  function claveAsis(gid, fecha){ return "asis:" + gid + ":" + fecha; }
-  function cargarAsistencia(){
-    var gid = $("#a-grupo").value, fecha = $("#a-fecha").value, cont = $("#lista-asistencia");
-    $("#msg-asis").textContent = "";
-    if (!gid || !fecha){ cont.innerHTML = ""; return; }
-    var lista = delGrupo(gid);
-    if (!lista.length){ cont.innerHTML = '<p class="vacio">Este grupo todavía no tiene alumnos. Agréguelos en la pestaña <b>Alumnos</b>.</p>'; $("#conteo-asis").textContent = ""; return; }
-    cont.innerHTML = '<p class="vacio">Cargando…</p>';
-    HOJA.leerPrivado(claveAsis(gid, fecha), clave).then(function(r){
-      var previo = r[claveAsis(gid, fecha)];
-      marcas = {};
-      lista.forEach(function(a){ marcas[a.id] = (previo && previo[a.id]) || "A"; });
-      pintarAsistencia(lista, !!previo);
-    }).catch(function(e){ cont.innerHTML = '<p class="msg error">' + esc(e.message) + '</p>'; });
-  }
-  function pintarAsistencia(lista, yaGuardada){
-    $("#lista-asistencia").innerHTML = (yaGuardada ? '<div class="nota" style="margin-bottom:8px">Esta lista ya se había guardado. Puede corregirla y volver a guardar.</div>' : '') +
-      lista.map(function(a, i){
-        return '<div class="asis-fila"><span class="num">' + (i + 1) + '</span><span class="nom">' + esc(nombreCompleto(a)) + '</span><span class="opciones" data-al="' + esc(a.id) + '">' +
-          ["A", "F", "R", "J"].map(function(v){ return '<button class="op" data-v="' + v + '" aria-pressed="' + (marcas[a.id] === v) + '">' + v + '</button>'; }).join("") + '</span></div>';
-      }).join("");
-    contar();
-  }
-  function contar(){
-    var c = { A: 0, F: 0, R: 0, J: 0 };
-    Object.keys(marcas).forEach(function(k){ c[marcas[k]]++; });
-    $("#conteo-asis").textContent = "Asistencias " + c.A + " · Faltas " + c.F + " · Retardos " + c.R + " · Justificadas " + c.J;
-  }
-  $("#lista-asistencia").addEventListener("click", function(ev){
-    var b = ev.target.closest(".op"); if (!b) return;
-    var cont = b.parentNode, id = cont.getAttribute("data-al");
-    marcas[id] = b.getAttribute("data-v");
-    $$(".op", cont).forEach(function(x){ x.setAttribute("aria-pressed", String(x === b)); });
-    contar(); $("#msg-asis").textContent = "";
-  });
-  $("#a-grupo").addEventListener("change", cargarAsistencia);
-  $("#a-fecha").addEventListener("change", cargarAsistencia);
-  $("#btn-guardar-asis").addEventListener("click", function(){
-    if (this.disabled) return;
-    var b = this, msg = $("#msg-asis"), gid = $("#a-grupo").value, fecha = $("#a-fecha").value;
-    if (!Object.keys(marcas).length){ msg.className = "msg error"; msg.textContent = "No hay alumnos en la lista."; return; }
-    b.disabled = true; msg.className = "msg"; msg.textContent = "Guardando…";
-    HOJA.guardar(claveAsis(gid, fecha), marcas, clave).then(function(){
-      msg.className = "msg ok"; msg.textContent = "Lista guardada.";
-    }).catch(function(e){ msg.className = "msg error"; msg.textContent = "No se guardó: " + e.message; })
-      .then(function(){ b.disabled = false; });
-  });
-
-  /* ---------------- Resumen ---------------- */
-  function cargarResumen(){
-    var gid = $("#r-grupo").value, mes = $("#r-mes").value, tb = $("#tabla-resumen");
-    if (!gid || !mes){ tb.innerHTML = ""; return; }
-    var lista = delGrupo(gid);
-    tb.innerHTML = '<tr><td colspan="7" class="vacio">Cargando…</td></tr>';
-    HOJA.leerPrivado("asis:" + gid + ":" + mes, clave).then(function(r){
-      var dias = Object.keys(r).length;
-      $("#dias-resumen").textContent = dias + (dias === 1 ? " día con lista" : " días con lista") + " en el mes.";
-      if (!lista.length){ tb.innerHTML = '<tr><td colspan="7" class="vacio">Este grupo no tiene alumnos.</td></tr>'; return; }
-      tb.innerHTML = lista.map(function(a, i){
-        var c = { A: 0, F: 0, R: 0, J: 0 }, total = 0;
-        Object.keys(r).forEach(function(k){ var v = r[k] && r[k][a.id]; if (v){ c[v]++; total++; } });
-        var pct = total ? Math.round((c.A + c.R) * 100 / total) : null;
-        return '<tr><td class="num">' + (i + 1) + '</td><td>' + esc(nombreCompleto(a)) + '</td><td>' + c.A + '</td><td>' + c.F + '</td><td>' + c.R + '</td><td>' + c.J + '</td>' +
-          '<td class="' + (pct != null && pct < 80 ? "pct-bajo" : "") + '">' + (pct == null ? "—" : pct + "%") + '</td></tr>';
-      }).join("");
-    }).catch(function(e){ tb.innerHTML = '<tr><td colspan="7" class="msg error">' + esc(e.message) + '</td></tr>'; });
-  }
-  $("#r-grupo").addEventListener("change", cargarResumen);
-  $("#r-mes").addEventListener("change", cargarResumen);
-  $("#btn-imprimir").addEventListener("click", function(){ window.print(); });
-})();
-</script>
+<script src="ce-nucleo.js"></script>
+<script src="ce-alumnos.js"></script>
+<script src="ce-secciones.js"></script>
+<script>CE.iniciar();</script>
 </body>
 </html>

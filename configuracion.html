@@ -354,6 +354,8 @@
     quitados = 0;
     try { valor = LECTORES[paso](); } catch(e){ msg.className = "msg error"; msg.textContent = e.message; return; }
     b.disabled = true; msg.className = "msg"; msg.textContent = "Guardando…";
+    // Los datos de la escuela se mezclan con lo ya guardado (Control Escolar agrega CP, sector, CORDE…)
+    if (paso === "escuela") valor = Object.assign({}, guardados["config:escuela"] || {}, valor);
     HOJA.guardar("config:" + paso, valor, claveDir).then(function(){
       guardados["config:" + paso] = valor;
       msg.className = "msg ok";

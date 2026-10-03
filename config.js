@@ -70,7 +70,7 @@ window.PORTAL = {
       texto: "Proyecto de Integración Comunitaria por grado. Documento de consulta para el colectivo.",
       estado: "pendiente", enlace: "" },
     { etiqueta: "Administración", color: "ocre", titulo: "Control Escolar",
-      texto: "Lista de alumnos por grupo, pase de lista diario y resumen mensual de asistencia. Próximamente: calificaciones.",
+      texto: "Inscripciones, directorio, estadística, asistencia, calificaciones, incidencias, avisos, calendario y personal.",
       estado: "lista", enlace: "control-escolar.html" }
   ],
 
