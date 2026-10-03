@@ -248,6 +248,23 @@
       var o = {}; $$("[data-f]", f).forEach(function(i){ o[i.getAttribute("data-f")] = i.value.trim(); }); return o;
     }).filter(function(o){ return Object.keys(o).some(function(k){ return lleno(o[k]); }); });
   }
+  // Quita renglones repetidos (mismo docente, mismo grupo, misma fecha y evento, mismo aviso)
+  var quitados = 0;
+  function normal(t){ return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/\s+/g, " ").trim(); }
+  var FIRMA = {
+    docentes: function(o){ return normal(o.nombre); },
+    grupos:   function(o){ return normal(o.grado).replace(/[^0-9A-Z]/g, "") + "|" + normal(o.grupo); },
+    fechas:   function(o){ return o.fecha + "|" + normal(o.evento); },
+    avisos:   function(o){ return normal(o.titulo) + "|" + o.fecha + "|" + normal(o.texto); }
+  };
+  function sinRepetidos(tipo, lista){
+    var vistos = {};
+    return lista.filter(function(o){
+      var k = FIRMA[tipo](o);
+      if (vistos[k]){ quitados++; return false; }
+      vistos[k] = 1; return true;
+    });
+  }
   function llenarFilas(tipo, lista){
     $("#lista-" + tipo).innerHTML = "";
     (lista && lista.length ? lista : [null]).forEach(function(d){ agregar(tipo, d); });
@@ -320,25 +337,31 @@
       if (!lleno(o.nombre)) throw new Error("El nombre de la escuela no puede quedar vacío.");
       return o;
     },
-    personal: function(){ return { director: $("#p-dir").value.trim(), docentes: leerFilas("docentes") }; },
-    grupos: function(){ return leerFilas("grupos"); },
+    personal: function(){ return { director: $("#p-dir").value.trim(), docentes: sinRepetidos("docentes", leerFilas("docentes")) }; },
+    grupos: function(){ return sinRepetidos("grupos", leerFilas("grupos")); },
     calendario: function(){
-      return { inicio: $("#c-ini").value, fin: $("#c-fin").value, dias: $("#c-dias").value.trim(), fuente: $("#c-fuente").value.trim(), fechas: leerFilas("fechas") };
+      return { inicio: $("#c-ini").value, fin: $("#c-fin").value, dias: $("#c-dias").value.trim(), fuente: $("#c-fuente").value.trim(), fechas: sinRepetidos("fechas", leerFilas("fechas")) };
     },
-    avisos: function(){ return leerFilas("avisos"); }
+    avisos: function(){ return sinRepetidos("avisos", leerFilas("avisos")); }
   };
 
   document.addEventListener("click", function(ev){
     var b = ev.target.closest("[data-guardar]");
-    if (!b) return;
+    if (!b || b.disabled) return;          // evita que un doble clic guarde dos veces
     var paso = b.getAttribute("data-guardar");
     var msg = $('[data-msg="' + paso + '"]');
     var valor;
+    quitados = 0;
     try { valor = LECTORES[paso](); } catch(e){ msg.className = "msg error"; msg.textContent = e.message; return; }
     b.disabled = true; msg.className = "msg"; msg.textContent = "Guardando…";
     HOJA.guardar("config:" + paso, valor, claveDir).then(function(){
       guardados["config:" + paso] = valor;
-      msg.className = "msg ok"; msg.textContent = "Guardado. Ya se ve en el portal.";
+      msg.className = "msg ok";
+      msg.textContent = "Guardado. Ya se ve en el portal." + (quitados ? " Se quitaron " + quitados + (quitados === 1 ? " renglón repetido." : " renglones repetidos.") : "");
+      if (paso === "personal") llenarFilas("docentes", valor.docentes);
+      if (paso === "grupos") llenarFilas("grupos", valor);
+      if (paso === "calendario") llenarFilas("fechas", valor.fechas);
+      if (paso === "avisos") llenarFilas("avisos", valor);
       if (paso === "escuela") llenarFormularios();
       var i = PASOS.findIndex(function(p){ return p[0] === paso; });
       pintarPasos(paso);
